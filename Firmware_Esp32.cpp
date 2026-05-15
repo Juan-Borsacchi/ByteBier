@@ -1,3 +1,7 @@
+// ==========================================
+// ByteBier Firmware - Versão: v1.0.0
+// ==========================================
+
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <OneWire.h>
