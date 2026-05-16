@@ -11,9 +11,9 @@ Este repositório contém a solução completa para o monitoramento automatizado
 Conforme estruturado no repositório, o projeto é composto por:
 
 - `Firmware_Esp32.cpp` → Código-fonte completo do firmware para o microcontrolador ESP32.
-- `API.python` → Backend em Flask que gerencia o motor de regras, limites operacionais e alertas.
+- `API.py` → Backend em Flask que gerencia o motor de regras, limites operacionais e alertas.
 - `ByteBier.sql` → Script de modelagem e criação do banco de dados relacional PostgreSQL.
-- `Dashboard.python` → Interface gráfica em Streamlit para visualização em tempo real e análise de KPIs.
+- `Dashboard.py` → Interface gráfica em Streamlit para visualização em tempo real e análise de KPIs.
 - `requirements.txt` → Arquivo com todas as dependências Python do projeto.
 - `README.md` → Guia completo de instalação, configuração, compilação e execução do sistema.
 
