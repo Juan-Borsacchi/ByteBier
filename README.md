@@ -183,7 +183,7 @@ Esse script irá:
 Abra o terminal na pasta do projeto e execute:
 
 ```bash
-python API.python
+python API.py
 ```
 
 A API iniciará na porta padrão:
@@ -199,7 +199,7 @@ http://localhost:5000
 Abra um segundo terminal na mesma pasta do projeto e execute:
 
 ```bash
-streamlit run Dashboard.python
+streamlit run Dashboard.py
 ```
 
 O painel abrirá automaticamente no navegador em:
