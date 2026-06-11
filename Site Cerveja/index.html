@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ByteBier | Projeto Cerveja Artesanal IoT</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="./favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./favicon/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    :root {
+      --bg: #0f0b06;
+      --bg-soft: #1a1208;
+      --card: rgba(255, 255, 255, 0.08);
+      --card-border: rgba(255, 196, 87, 0.25);
+      --text: #fff7e8;
+      --muted: #d8c6a5;
+      --gold: #f5b83f;
+      --amber: #d9821f;
+      --brown: #5b3212;
+      --green: #52c26b;
+      --red: #ef5350;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at top left, #3a220e 0%, #140d07 35%, #070503 100%);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 15% 20%, rgba(245, 184, 63, 0.15), transparent 22%),
+        radial-gradient(circle at 80% 10%, rgba(217, 130, 31, 0.16), transparent 22%),
+        radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.06), transparent 18%);
+      z-index: -1;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 50;
+      -webkit-backdrop-filter: blur(18px) saturate(1.25);
+      backdrop-filter: blur(18px) saturate(1.25);
+      background:
+        linear-gradient(90deg, rgba(10, 7, 3, 0.9), rgba(37, 21, 8, 0.78), rgba(10, 7, 3, 0.9));
+      border-bottom: 1px solid rgba(245, 184, 63, 0.16);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(245, 184, 63, 0.62), transparent);
+    }
+
+    nav {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 10px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      color: #fff4dc;
+      text-decoration: none;
+    }
+
+    .logo-img {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.28));
+    }
+
+    .brand span {
+      position: relative;
+      font-size: 18px;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .brand span::after {
+      content: "Cerveja Artesanal IoT";
+      display: block;
+      margin-top: 6px;
+      color: rgba(216, 198, 165, 0.72);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.055);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      font-size: 13px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      transition: 0.25s;
+    }
+
+    .nav-links a:hover {
+      color: #2b1708;
+      background: linear-gradient(135deg, var(--gold), var(--amber));
+      box-shadow: 0 10px 24px rgba(217, 130, 31, 0.22);
+    }
+
+    .nav-links a:last-child {
+      color: #241406;
+      background: rgba(245, 184, 63, 0.92);
+      box-shadow: 0 10px 24px rgba(217, 130, 31, 0.2);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      transition: 0.25s;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--amber));
+      color: #221306;
+      border: none;
+      box-shadow: 0 14px 35px rgba(217, 130, 31, 0.25);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    section {
+      min-height: 86vh;
+      padding: 100px 22px 56px;
+      display: flex;
+      align-items: center;
+    }
+
+    section:not(#inicio) {
+      min-height: auto;
+      padding: 76px 22px 54px;
+      align-items: flex-start;
+      scroll-margin-top: 34px;
+    }
+
+    .container {
+      max-width: 1180px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 42px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      text-transform: uppercase;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(46px, 7vw, 86px);
+      line-height: 0.95;
+      letter-spacing: -3px;
+      margin-bottom: 22px;
+    }
+
+    h2 {
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1;
+      letter-spacing: -2px;
+      margin-bottom: 14px;
+    }
+
+    h3 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.62;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 32px;
+    }
+
+    .beer-card {
+      position: relative;
+      min-height: 520px;
+      border-radius: 34px;
+      background:
+        linear-gradient(180deg, rgba(255, 228, 167, 0.08), rgba(0, 0, 0, 0) 34%),
+        linear-gradient(180deg, #2a170b 0%, #160c06 58%, #0d0704 100%);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+
+    .beer-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.28), transparent 22%, transparent 78%, rgba(0, 0, 0, 0.32)),
+        radial-gradient(ellipse at 50% 30%, rgba(255, 192, 96, 0.28), transparent 46%),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 72px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .beer-card::after {
+      content: "";
+      position: absolute;
+      left: 18%;
+      right: 18%;
+      bottom: 12%;
+      height: 18%;
+      background:
+        radial-gradient(ellipse at center, rgba(0, 0, 0, 0.34), rgba(0, 0, 0, 0.08) 46%, transparent 72%);
+      filter: blur(8px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .beer-glass {
+      width: 232px;
+      height: 372px;
+      border: 8px solid rgba(255, 248, 237, 0.7);
+      border-top: 10px solid rgba(255, 248, 237, 0.86);
+      border-radius: 18px 18px 52px 52px / 22px 22px 64px 64px;
+      position: relative;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.04) 12%, transparent 28%, transparent 74%, rgba(255, 255, 255, 0.08) 90%, rgba(255, 255, 255, 0.18)),
+        radial-gradient(ellipse at 50% 9%, rgba(255, 246, 202, 0.86), rgba(255, 221, 126, 0.28) 28%, transparent 50%),
+        radial-gradient(ellipse at 50% 64%, rgba(255, 189, 62, 0.2), transparent 45%),
+        linear-gradient(180deg, #f8cf66 0%, #e89022 44%, #9f4d0d 100%);
+      box-shadow:
+        inset 18px 0 28px rgba(255, 255, 255, 0.12),
+        inset -22px 0 30px rgba(82, 33, 5, 0.2),
+        inset 0 -38px 58px rgba(80, 31, 5, 0.3),
+        inset 0 12px 22px rgba(255, 246, 210, 0.28),
+        0 30px 76px rgba(0, 0, 0, 0.34);
+      animation: beerFloat 4.5s ease-in-out infinite;
+      z-index: 2;
+    }
+
+    .beer-glass::before {
+      content: "";
+      position: absolute;
+      top: -61px;
+      left: -16px;
+      width: 248px;
+      height: 92px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 13% 58%, rgba(255, 255, 255, 0.98) 0 25px, transparent 26px),
+        radial-gradient(circle at 35% 32%, rgba(255, 253, 241, 0.98) 0 35px, transparent 36px),
+        radial-gradient(circle at 59% 50%, rgba(255, 255, 247, 0.98) 0 32px, transparent 33px),
+        radial-gradient(circle at 80% 42%, rgba(255, 249, 224, 0.96) 0 24px, transparent 25px),
+        radial-gradient(circle at 48% 83%, rgba(245, 220, 169, 0.72) 0 20px, transparent 21px),
+        #fff4d7;
+      box-shadow:
+        inset 0 -12px 20px rgba(219, 171, 93, 0.18),
+        0 14px 28px rgba(0, 0, 0, 0.1);
+      z-index: 5;
+    }
+
+    .beer-glass::after {
+      content: "";
+      position: absolute;
+      top: 18px;
+      bottom: 28px;
+      left: 22px;
+      width: 34px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.03));
+      opacity: 0.52;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .beer-glass__logo {
+      position: absolute;
+      left: 50%;
+      top: 55%;
+      transform: translate(-50%, -50%);
+      width: 156px;
+      height: 156px;
+      object-fit: contain;
+      image-rendering: auto;
+      backface-visibility: hidden;
+      z-index: 4;
+      filter:
+        contrast(1.08) saturate(1.08) drop-shadow(0 7px 12px rgba(44, 18, 3, 0.24));
+    }
+
+    @keyframes beerFloat {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(-1deg);
+      }
+
+      50% {
+        transform: translateY(-12px) rotate(1deg);
+      }
+    }
+
+    .bubble {
+      position: absolute;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 35% 32%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.32) 28%, rgba(255, 255, 255, 0.12) 60%, transparent 72%);
+      box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.32);
+      animation: float 4s infinite ease-in-out;
+      z-index: 2;
+    }
+
+    .b1 {
+      width: 18px;
+      height: 18px;
+      left: 18%;
+      top: 68%;
+      animation-delay: 0s;
+      animation-duration: 4.2s;
+    }
+
+    .b2 {
+      width: 11px;
+      height: 11px;
+      left: 72%;
+      top: 58%;
+      animation-delay: 0.8s;
+      animation-duration: 3.6s;
+    }
+
+    .b3 {
+      width: 24px;
+      height: 24px;
+      left: 78%;
+      top: 78%;
+      animation-delay: 1.4s;
+      animation-duration: 4.8s;
+    }
+
+    .b4 {
+      width: 14px;
+      height: 14px;
+      left: 28%;
+      top: 26%;
+      animation-delay: 2s;
+      animation-duration: 3.8s;
+    }
+
+    .b5 {
+      width: 9px;
+      height: 9px;
+      left: 38%;
+      top: 74%;
+      animation-delay: 0.4s;
+      animation-duration: 3.4s;
+    }
+
+    .b6 {
+      width: 13px;
+      height: 13px;
+      left: 62%;
+      top: 72%;
+      animation-delay: 1.1s;
+      animation-duration: 4.1s;
+    }
+
+    .b7 {
+      width: 8px;
+      height: 8px;
+      left: 43%;
+      top: 42%;
+      animation-delay: 1.8s;
+      animation-duration: 3.2s;
+    }
+
+    .b8 {
+      width: 16px;
+      height: 16px;
+      left: 58%;
+      top: 34%;
+      animation-delay: 2.4s;
+      animation-duration: 4.6s;
+    }
+
+    .b9 {
+      width: 10px;
+      height: 10px;
+      left: 22%;
+      top: 48%;
+      animation-delay: 2.9s;
+      animation-duration: 3.7s;
+    }
+
+    .b10 {
+      width: 20px;
+      height: 20px;
+      left: 82%;
+      top: 38%;
+      animation-delay: 0.2s;
+      animation-duration: 5s;
+    }
+
+    .b11 {
+      width: 7px;
+      height: 7px;
+      left: 67%;
+      top: 24%;
+      animation-delay: 3.1s;
+      animation-duration: 3.3s;
+    }
+
+    .b12 {
+      width: 12px;
+      height: 12px;
+      left: 33%;
+      top: 82%;
+      animation-delay: 1.6s;
+      animation-duration: 4.4s;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0) translateX(0);
+        opacity: 0.42;
+      }
+
+      50% {
+        transform: translateY(-46px) translateX(8px);
+        opacity: 0.9;
+      }
+    }
+
+    .glass-base {
+      position: absolute;
+      bottom: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 118px;
+      height: 24px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255, 244, 222, 0.9), rgba(216, 160, 88, 0.45));
+      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.12);
+    }
+
+    .beer-shadow {
+      position: absolute;
+      bottom: 74px;
+      width: 220px;
+      height: 38px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(0, 0, 0, 0.34), transparent 72%);
+      filter: blur(10px);
+      z-index: 1;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 26px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 22px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.2);
+      transition: 0.25s;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      background: rgba(255, 255, 255, 0.11);
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: rgba(245, 184, 63, 0.16);
+      border: 1px solid rgba(245, 184, 63, 0.28);
+      color: var(--gold);
+      font-size: 24px;
+      margin-bottom: 14px;
+    }
+
+    .timeline {
+      position: relative;
+      margin-top: 26px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 68px 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .step-number {
+      width: 58px;
+      height: 58px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      color: #221306;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--gold), var(--amber));
+      box-shadow: 0 14px 30px rgba(217, 130, 31, 0.24);
+    }
+
+    .architecture {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .arch-item {
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.075);
+      border: 1px solid var(--card-border);
+      text-align: center;
+      min-height: 132px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .arch-item strong {
+      font-size: 17px;
+    }
+
+    .arch-item span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .mock-dashboard {
+      margin-top: 26px;
+      padding: 22px;
+      border-radius: 28px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.045)),
+        rgba(12, 8, 4, 0.82);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .dashboard-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .dashboard-title strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .dashboard-title small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 13px;
+      border-radius: 999px;
+      color: #1b1005;
+      background: linear-gradient(135deg, var(--gold), var(--amber));
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .live-badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 0 5px rgba(82, 194, 107, 0.18);
+    }
+
+    .live-badge.offline {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .live-badge.offline::before {
+      background: var(--red);
+      box-shadow: 0 0 0 5px rgba(239, 83, 80, 0.16);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .metric {
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(0, 0, 0, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .metric small {
+      color: var(--muted);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .metric strong {
+      font-size: 26px;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: rgba(255, 247, 232, 0.66);
+      font-size: 12px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.85fr);
+      gap: 14px;
+    }
+
+    .dashboard-panel {
+      min-width: 0;
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(0, 0, 0, 0.24);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .panel-head strong {
+      font-size: 16px;
+    }
+
+    .panel-head span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .chart {
+      height: 245px;
+      border-radius: 20px;
+      background:
+        linear-gradient(to top, rgba(255, 255, 255, 0.08) 1px, transparent 1px) 0 0 / 100% 48px,
+        linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px) 0 0 / 72px 100%,
+        rgba(0, 0, 0, 0.22);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chart svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .control-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .gauge {
+      width: 178px;
+      height: 178px;
+      margin: 4px auto 0;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at center, rgba(18, 11, 5, 0.96) 0 56%, transparent 57%),
+        conic-gradient(var(--gold) 0 72%, rgba(255, 255, 255, 0.08) 72% 100%);
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.06);
+    }
+
+    .gauge strong {
+      font-size: 34px;
+      line-height: 1;
+    }
+
+    .gauge span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .control-row,
+    .event {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .control-row small,
+    .event small {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .control-row strong,
+    .event strong {
+      font-size: 14px;
+    }
+
+    .event-list {
+      display: grid;
+      gap: 0;
+    }
+
+    .event-panel {
+      margin-top: 14px;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 26px;
+    }
+
+    .person {
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.075);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .person strong {
+      color: var(--gold);
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .person span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer-section {
+      min-height: 54vh;
+      text-align: center;
+    }
+
+    .footer-section .container {
+      max-width: 900px;
+    }
+
+    .slide-tag {
+      display: inline-flex;
+      padding: 7px 13px;
+      border-radius: 999px;
+      background: rgba(245, 184, 63, 0.12);
+      color: var(--gold);
+      border: 1px solid rgba(245, 184, 63, 0.25);
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .dashboard-showcase {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .dashboard-image {
+      width: 100%;
+      max-width: 700px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+    }
+
+    .dashboard-info {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .dashboard-info ul {
+      margin-top: 15px;
+      padding-left: 20px;
+    }
+
+    .dashboard-info li {
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 920px) {
+
+      .hero-grid,
+      .cards-grid,
+      .architecture,
+      .metrics,
+      .dashboard-grid,
+      .team-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-top,
+      .event {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      section {
+        min-height: auto;
+        padding-top: 110px;
+      }
+
+      section:not(#inicio) {
+        scroll-margin-top: 0;
+      }
+
+      .beer-card {
+        min-height: 500px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <div class="brand">
+        <img src="logocerveja.png" alt="Logo Byte Bier" class="logo-img" />
+        <span>ByteBier</span>
+      </div>
+      <div class="nav-links">
+        <a href="#problema">Problema</a>
+        <a href="#processo">Processo</a>
+        <a href="#hardware">Hardware</a>
+        <a href="#arquitetura">Arquitetura</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#resultados">Resultados</a>
+      </div>
+    </nav>
+  </header>
+
+  <section id="inicio">
+    <div class="container hero-grid">
+      <div>
+        <h1>ByteBier</h1>
+        <p>
+          Sistema de automação e monitoramento de temperatura para produção de cerveja artesanal,
+          utilizando ESP32, sensores, relé, API e banco de dados.
+        </p>
+        <div class="hero-actions">
+          <a href="#problema" class="btn btn-primary">Ver apresentação</a>
+          <a href="#arquitetura" class="btn">Arquitetura do sistema</a>
+        </div>
+      </div>
+
+      <div class="beer-card" aria-label="Ilustração principal da marca Byte Bier">
+        <span class="bubble b1" aria-hidden="true"></span>
+        <span class="bubble b2" aria-hidden="true"></span>
+        <span class="bubble b3" aria-hidden="true"></span>
+        <span class="bubble b4" aria-hidden="true"></span>
+        <span class="bubble b5" aria-hidden="true"></span>
+        <span class="bubble b6" aria-hidden="true"></span>
+        <span class="bubble b7" aria-hidden="true"></span>
+        <span class="bubble b8" aria-hidden="true"></span>
+        <span class="bubble b9" aria-hidden="true"></span>
+        <span class="bubble b10" aria-hidden="true"></span>
+        <span class="bubble b11" aria-hidden="true"></span>
+        <span class="bubble b12" aria-hidden="true"></span>
+        <div class="beer-shadow" aria-hidden="true"></div>
+        <div class="beer-glass">
+          <img src="logocerveja.png" alt="Logo Byte Bier" class="beer-glass__logo" />
+          <div class="glass-base" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="problema">
+    <div class="container">
+      <span class="slide-tag">01 · Problema</span>
+      <h2>Por que controlar a temperatura?</h2>
+      <p>
+        Na produção de cerveja artesanal, a temperatura influencia diretamente o sabor,
+        a fermentação, a estabilidade e a qualidade final da bebida. Pequenas variações
+        podem afetar o desempenho da levedura, o corpo da cerveja e o resultado sensorial.
+      </p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="icon">🌡️</div>
+          <h3>Temperatura crítica</h3>
+          <p>Cada etapa do processo possui uma faixa ideal que precisa ser acompanhada.</p>
+        </div>
+        <div class="card">
+          <div class="icon">⚠️</div>
+          <h3>Risco de falhas</h3>
+          <p>Sem monitoramento, a produção fica mais sujeita a variações e perda de qualidade.</p>
+        </div>
+        <div class="card">
+          <div class="icon">📊</div>
+          <h3>Falta de dados</h3>
+          <p>Registrar os dados permite analisar o processo e melhorar futuras brassagens.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="objetivo">
+    <div class="container">
+      <span class="slide-tag">02 · Objetivo</span>
+      <h2>Automatizar, monitorar e documentar</h2>
+      <p>
+        O objetivo do Byte Bier é desenvolver um sistema capaz de medir a temperatura do líquido,
+        acompanhar a temperatura ambiente e umidade, controlar um atuador por relé e preparar os dados
+        para visualização em um dashboard próprio.
+      </p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="icon">🔌</div>
+          <h3>Controle eletrônico</h3>
+          <p>Uso do ESP32 como microcontrolador principal do sistema.</p>
+        </div>
+        <div class="card">
+          <div class="icon">📡</div>
+          <h3>Comunicação Wi-Fi</h3>
+          <p>Envio das leituras para uma API por meio de requisições HTTP.</p>
+        </div>
+        <div class="card">
+          <div class="icon">🖥️</div>
+          <h3>Dashboard próprio</h3>
+          <p>Integração com painel para acompanhar leituras, histórico e alertas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="processo">
+    <div class="container">
+      <span class="slide-tag">03 · Processo cervejeiro</span>
+      <h2>Da brassagem ao envase</h2>
+      <p>
+        O processo de produção envolve etapas quentes e frias. O controle térmico é especialmente
+        importante na mostura, fervura, fermentação e maturação.
+      </p>
+
+      <div class="timeline">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="card">
+            <h3>Moagem e mostura</h3>
+            <p>O malte é preparado e misturado à água em temperatura controlada para extração dos açúcares.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="card">
+            <h3>Clarificação e fervura</h3>
+            <p>O mosto é separado dos grãos e fervido, etapa em que também ocorre a adição de lúpulo.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="card">
+            <h3>Resfriamento e fermentação</h3>
+            <p>O líquido é resfriado para receber a levedura e iniciar a transformação dos açúcares em álcool e CO₂.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="card">
+            <h3>Maturação e envase</h3>
+            <p>A cerveja estabiliza suas características antes de ser envasada e apresentada.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="hardware">
+    <div class="container">
+      <span class="slide-tag">04 · Hardware</span>
+      <h2>Componentes utilizados</h2>
+      <p>
+        O protótipo utiliza sensores e atuadores conectados ao ESP32 para medir, exibir e controlar
+        o processo de temperatura.
+      </p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="icon">🧠</div>
+          <h3>ESP32</h3>
+          <p>Microcontrolador responsável pela leitura dos sensores, lógica de controle e comunicação Wi-Fi.</p>
+        </div>
+        <div class="card">
+          <div class="icon">💧</div>
+          <h3>DS18B20</h3>
+          <p>Sensor de temperatura do líquido, usado para acompanhar o mosto ou o ambiente de fermentação.</p>
+        </div>
+        <div class="card">
+          <div class="icon">🌫️</div>
+          <h3>DHT22</h3>
+          <p>Sensor utilizado para temperatura ambiente e umidade relativa.</p>
+        </div>
+        <div class="card">
+          <div class="icon">⚡</div>
+          <h3>Relé</h3>
+          <p>Atuador responsável por ligar ou desligar o sistema de aquecimento ou refrigeração.</p>
+        </div>
+        <div class="card">
+          <div class="icon">🔘</div>
+          <h3>Botões</h3>
+          <p>Permitem ajustar o setpoint e trocar a etapa do processo.</p>
+        </div>
+        <div class="card">
+          <div class="icon">📟</div>
+          <h3>LCD 16x2</h3>
+          <p>Mostra temperatura, setpoint, etapa atual e status do relé diretamente no protótipo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="controle">
+    <div class="container">
+      <span class="slide-tag">05 · Controle de temperatura</span>
+      <h2>Como o sistema atua</h2>
+      <p>
+        O sensor mede a temperatura do líquido. O ESP32 compara o valor medido com o setpoint da etapa atual.
+        Caso a temperatura saia da faixa definida, o relé é acionado para corrigir o processo.
+      </p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="icon">📥</div>
+          <h3>Entrada</h3>
+          <p>Temperatura do líquido, temperatura ambiente, umidade e etapa do processo.</p>
+        </div>
+        <div class="card">
+          <div class="icon">⚙️</div>
+          <h3>Processamento</h3>
+          <p>O ESP32 compara a leitura com o valor desejado e decide se deve acionar o relé.</p>
+        </div>
+        <div class="card">
+          <div class="icon">📤</div>
+          <h3>Saída</h3>
+          <p>Acionamento do relé, atualização do LCD e envio das leituras para a API.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="arquitetura">
+    <div class="container">
+      <span class="slide-tag">06 · Arquitetura</span>
+      <h2>Do sensor ao sistema</h2>
+      <p>
+        A arquitetura foi pensada para permitir leitura local no protótipo e envio dos dados para uma aplicação,
+        sem depender de plataformas prontas como Blynk ou Arduino Cloud.
+      </p>
+
+      <div class="architecture">
+        <div class="arch-item"><strong>Sensor</strong><span>DS18B20 e DHT22 coletam os dados</span></div>
+        <div class="arch-item"><strong>ESP32</strong><span>Processa leituras e controla o relé</span></div>
+        <div class="arch-item"><strong>Wi-Fi</strong><span>Envia dados via requisição HTTP</span></div>
+        <div class="arch-item"><strong>API</strong><span>Recebe, valida e registra os dados</span></div>
+        <div class="arch-item"><strong>Dashboard</strong><span>Exibe gráficos, status e alertas do processo</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="dashboard">
+    <div class="container">
+      <span class="slide-tag">07 · Dashboard</span>
+      <h2>Monitoramento em tempo real</h2>
+      <p>
+        O painel concentra as leituras do protótipo, acompanha a estabilidade da fermentação
+        e mostra o estado do controle de temperatura em uma interface única.
+      </p>
+      <div class="dashboard-showcase">
+
+        <img src="dashboard.jpg" alt="Dashboard ByteBier" class="dashboard-image">
+
+        <div class="dashboard-info">
+          <h3>Dashboard de Monitoramento</h3>
+
+          <p>
+            A dashboard do ByteBier foi desenvolvida para acompanhar em tempo real
+            as condições do processo cervejeiro, reunindo informações dos sensores,
+            histórico de leituras e alertas em uma única interface.
+          </p>
+
+          <ul>
+            <li>Monitoramento da temperatura do líquido.</li>
+            <li>Monitoramento da temperatura ambiente.</li>
+            <li>Acompanhamento da umidade.</li>
+            <li>Visualização gráfica do histórico de leituras.</li>
+            <li>Alertas automáticos para desvios de temperatura.</li>
+            <li>Registro de dados para análise do processo.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="resultados">
+    <div class="container">
+      <span class="slide-tag">08 · Resultados esperados</span>
+      <h2>O que o Byte Bier entrega</h2>
+      <p>
+        O projeto une eletrônica, automação, programação e processo cervejeiro em uma solução prática para
+        monitoramento e controle de temperatura.
+      </p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="icon">✅</div>
+          <h3>Protótipo funcional</h3>
+          <p>Hardware com sensores, LCD, botões e controle por relé.</p>
+        </div>
+        <div class="card">
+          <div class="icon">🗄️</div>
+          <h3>Registro de dados</h3>
+          <p>Leituras preparadas para armazenamento em banco de dados.</p>
+        </div>
+        <div class="card">
+          <div class="icon">🚨</div>
+          <h3>Alertas</h3>
+          <p>Identificação de temperaturas fora da faixa ideal de cada etapa.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="equipe">
+    <div class="container">
+      <span class="slide-tag">09 · Equipe</span>
+      <h2>Grupo Byte Bier</h2>
+      <p>
+        Desenvolvimento realizado por alunos de Engenharia da Computação, com divisão de funções entre
+        programação, eletrônica, montagem, documentação, logística e organização do projeto.
+      </p>
+
+      <div class="team-grid">
+        <div class="person"><strong>Programação e Automação</strong><span>Integração do ESP32, API e dashboard</span>
+        </div>
+        <div class="person"><strong>Eletrônica</strong><span>Montagem dos sensores, relé, botões e LCD</span></div>
+        <div class="person"><strong>Prototipação</strong><span>Construção e testes do circuito</span></div>
+        <div class="person"><strong>Documentação Técnica</strong><span>Registro das decisões e etapas do projeto</span>
+        </div>
+        <div class="person"><strong>Orçamento e Logística</strong><span>Organização de componentes e materiais</span>
+        </div>
+        <div class="person"><strong>Liderança</strong><span>Planejamento, prazos e apresentação final</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="footer-section" id="conclusao">
+    <div class="container">
+      <span class="slide-tag">10 · Conclusão</span>
+      <h2>Tecnologia aplicada à cerveja artesanal</h2>
+      <p>
+        O Byte Bier demonstra como a Engenharia da Computação pode ser aplicada em um processo real,
+        conectando sensores, microcontrolador, automação, banco de dados e visualização para tornar a
+        produção de cerveja mais controlada, confiável e documentada.
+      </p>
+      <div class="hero-actions" style="justify-content: center;">
+        <a href="#inicio" class="btn btn-primary">Voltar ao início</a>
+      </div>
+    </div>
+  </section>
+</body>
+
+</html>
